@@ -1,20 +1,31 @@
 const info = require('./info.json')
-
 const keys = require('./keys.json')
 const axios = require('axios');
 const fs = require('fs');
+const utils = require('./utils.js');
 const path = require('path');
 
 /** 填写cookie */
-const cookie = ''
+let cookie = ''
 
+if (!cookie) {
+  // 读取txt文件的路径
+  const filePath = './cookie.txt';
+  try {
+    // 使用fs.readFileSync方法同步读取文件内容
+    const data = fs.readFileSync(filePath, 'utf-8');
+    cookie = data.replace(/^"|"$/g, "")
+  } catch (err) {
+    console.error('读取cookie文件时出错:', err);
+  }
+}
 let currIdx = 0
 const failFiles = [];
 const axiosAndDownload = async (idx) => {
   const name = keys[idx]
   const filePath = `./download/${name}.zip`;
 
-  const is = await checkFile(filePath)
+  const is = await utils.checkFile(filePath)
   if (!is) {
     // 创建一个空的FormData对象
     const formData = new FormData();
@@ -29,13 +40,13 @@ const axiosAndDownload = async (idx) => {
     const startTime = +new Date()
     axios.post('https://web.everphoto.cn/api/media/archive', formData, config)
       .then(async (response) => {
-        await sleep(5000)
+        await utils.sleep(5000)
         downloadFile(response.data.data.url, name)
       }).catch((err) => {
         const tip = `${name}.zip，下载失败，时光相册错误通知：${err.response.data.message}`
         console.log(tip)
         currIdx += 1
-        failFiles.push(tip)
+        failFiles.push(tip, 'mediaIds:' + info[name])
         if (currIdx < keys.length) {
           axiosAndDownload(currIdx)
         } else {
@@ -68,7 +79,7 @@ const axiosAndDownload = async (idx) => {
         .catch((error) => {
           const tip = `${name}.zip文件下载失败，可稍后重新运行`
           console.log(tip)
-          failFiles.push(tip)
+          failFiles.push(tip, 'mediaIds:' + info[name])
           console.error(tip);
           currIdx += 1
           if (currIdx < keys.length) {
@@ -91,32 +102,22 @@ const axiosAndDownload = async (idx) => {
   }
 }
 
-/** 查看文件是否存在 */
-const checkFile = (path) => {
-  return new Promise((resolve, reject) => {
-    fs.access(path, fs.constants.F_OK, (err) => {
-      if (err) {
-        resolve(false)
-        return;
-      }
-      resolve(true)
-    })
-  })
-}
-const sleep = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
 const writeFile = (data) => {
   const text = +new Date()
   const filePath = `./log/${text}.txt`;
   // 将变量值写入文件
   fs.writeFile(`${filePath}`, data.join('\n'), (err) => {
     if (err) throw err;
-  
+
     console.log(`错误日志文件：${filePath}`);
   });
 }
-axiosAndDownload(currIdx)
+
+if (cookie) {
+  axiosAndDownload(currIdx)
+} else {
+  console.log('cookie为空，请设置或者复制下载的cookie.txt到根目录');
+}
 
 
 

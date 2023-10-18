@@ -12,11 +12,11 @@
 (function () {
   'use strict';
   openindexedDB()
+  let allData = []
   function openindexedDB() {
     // 创建或打开数据库
     let request = indexedDB.open('everphoto', 10);
     // 数据库被成功打开
-    let allData = []
     request.onsuccess = function (event) {
       let db = event.target.result;
       let transaction = db.transaction('media', 'readonly');
@@ -111,6 +111,23 @@
       btnCookie.onclick = function () {
         const jsonData = JSON.stringify(document.cookie);
         downloadData(jsonData, 'cookie.txt');
+      }
+
+
+      const btnMetadata = document.createElement('div')
+      btnMetadata.innerText = '下载原始数据'
+      btnMetadata.className = 'button '
+      // 设置内联样式
+      btnMetadata.style.color = "#044cf3";
+      btnMetadata.style.fontWeight = "bold";
+      btnMetadata.style.cursor = 'pointer'
+      btnMetadata.style.marginRight = '20px'
+      btnMetadata.style.lineHeight = '36px'
+      currentUser.insertBefore(btnMetadata, firstChild)
+
+      btnMetadata.onclick = function () {
+        const jsonData = JSON.stringify(allData);
+        downloadData(jsonData, 'allData.json');
       }
     }, 2000)
     return { map: result, keys };
