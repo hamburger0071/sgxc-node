@@ -4,8 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 const AdmZip = require('adm-zip');
-  
-async function  checkZipFile(filename, corruptedFiles) {
+
+async function checkZipFile(filename, corruptedFiles) {
   try {
     const zip = new AdmZip(filename);
     const zipEntries = zip.getEntries();
@@ -34,5 +34,6 @@ fs.readdir(directory, (err, files) => {
   const endTime = +new Date()
   const duration = endTime - startTime
   console.log(`检查文件完成，耗时：${duration / 1000}秒`);
-  console.log('损坏的文件，建议删除后重新下载', corruptedFiles);
+  const tip = corruptedFiles.length ? '损坏的文件，建议删除后重新下载' : '无损坏的文件'
+  console.log(tip, tip && corruptedFiles);
 });
