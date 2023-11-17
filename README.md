@@ -6,9 +6,9 @@
 
 # 2.打开时光相册web网站 https://web.everphoto.cn/ 并登录
 
-右上角会多出下载info.json、下载Keys.json、下载cookie按钮
+右上角会多出下载**info.json**、下载**Keys.json**、下载**cookie**按钮
 
-想保存原始数据的可以 下载原始数据按钮
+想保存原始数据的可以 下载**原始数据按钮**
 
 # 3.把这3个文件复制到项目中
 
@@ -16,16 +16,18 @@
 
 没有nodejs环境的先安装nodejs https://nodejs.org/en
 
-安装好nodejs后运行 npm install
+安装好nodejs后运行 
+
+## npm install
 
 # 5.运行
 运行前根目录创建一个download文件夹
 然后执行
-node index.js
+## node index.js
 
 下载完成的文件会放在download文件夹中
 
 # 6.可使用checkZip.js检查压缩文件是否损坏
 
-node checkZip.js
+## node checkZip.js
 
