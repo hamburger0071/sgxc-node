@@ -4,6 +4,7 @@ const axios = require('axios');
 const fs = require('fs');
 const utils = require('./utils.js');
 const path = require('path');
+const FormData = require('form-data');
 
 /** 填写cookie */
 let cookie = ''

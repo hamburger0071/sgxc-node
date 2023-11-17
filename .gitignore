@@ -19,7 +19,7 @@ package-lock.json
 yarn.lock
 
 decompress/*
-download/*
+
 log/*
 info.json
 keys.json
