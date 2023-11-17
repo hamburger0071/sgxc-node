@@ -19,6 +19,8 @@
 安装好nodejs后运行 npm install
 
 # 5.运行
+运行前根目录创建一个download文件夹
+然后执行
 node index.js
 
 下载完成的文件会放在download文件夹中
